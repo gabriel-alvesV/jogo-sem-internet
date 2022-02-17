@@ -4,11 +4,18 @@ var chao2;
 var grama;
 var nuvem;
 var nuvemImagem;
-
+var I1,I2,I3,I4,I5,I6;
+var placar=0;
 function preload(){
 RexCorrendo = loadAnimation("trex1.png","trex3.png","trex4.png");
 grama= loadImage('ground2.png');
 nuvemImagem=loadImage('cloud.png');
+I1=loadImage('obstacle1.png');
+I2=loadImage('obstacle2.png');
+I3=loadImage('obstacle3.png');
+I4=loadImage('obstacle4.png');
+I5=loadImage('obstacle5.png');
+I6=loadImage('obstacle6.png');
 }
 
 function setup(){
@@ -39,15 +46,22 @@ if(chao.x<0){
 chao.x=chao.width/2;
 }
 
-if(keyDown("space")&&Rex.y>=150){
-Rex.velocityY = -10;
+if(keyDown("space")&&Rex.y>=155){
+Rex.velocityY = -12;
 }
 Rex.velocityY += 1;
 Rex.collide(chao2);
 
 nuvens();
+inimigos();
 
 drawSprites();
+textSize(15);
+textFont('Courier New');
+text(placar,500,50);
+placar+=Math.round(frameCount/60);
+
+
 }
 
 function nuvens(){
@@ -56,9 +70,36 @@ function nuvens(){
         nuvem.addImage(nuvemImagem);
         nuvem.y=Math.round(random(1,120));
         nuvem.scale=0.6
- nuvem.velocityX=-3;
- nuvem.depth=Rex.depth;
- Rex.depth+=1;
+        nuvem.velocityX=-3;
+
+        nuvem.lifetime = 250;
+
+        nuvem.depth=Rex.depth;
+        Rex.depth+=1;
     }
  
+}
+function inimigos(){
+    if(frameCount%60===0){
+        var inimigo=createSprite(600,165,10,40);
+        inimigo.velocityX=-6;
+        var x=Math.round(random(1,6));
+        switch(x){
+            case 1:inimigo.addImage(I1);
+            break;
+            case 2:inimigo.addImage(I2);
+            break;
+            case 3:inimigo.addImage(I3);
+            break;
+            case 4:inimigo.addImage(I4);
+            break;
+            case 5:inimigo.addImage(I5);
+            break;
+            case 6:inimigo.addImage(I6);
+            break;
+            default:break;
+        }
+        inimigo.scale=0.5;
+        inimigo.lifetime=300;
+    }
 }
