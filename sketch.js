@@ -6,6 +6,11 @@ var nuvem;
 var nuvemImagem;
 var I1,I2,I3,I4,I5,I6;
 var placar=0;
+var grupoInimigos;
+var grupoNuvens;
+var JOGANDO = 1;
+var ACABOU = 0;
+var estado = JOGANDO;
 function preload(){
 RexCorrendo = loadAnimation("trex1.png","trex3.png","trex4.png");
 grama= loadImage('ground2.png');
@@ -35,31 +40,56 @@ chao2.visible=false;
 
 var numero = Math.round(random(1, 100));
 console.log(numero);
+
+grupoInimigos = new Group();
+grupoNuvens = new Group();
 }
 
 function draw(){
 background("white");
 //console.log(Rex.y);
 
-chao.velocityX=-2;
-if(chao.x<0){
-chao.x=chao.width/2;
+if(estado === JOGANDO){
+    chao.velocityX=-2;
+    if(keyDown("space")&&Rex.y>=155){
+        Rex.velocityY = -12;
 }
-
-if(keyDown("space")&&Rex.y>=155){
-Rex.velocityY = -12;
+if(chao.x<0){
+    chao.x=chao.width/2;
 }
 Rex.velocityY += 1;
-Rex.collide(chao2);
-
+placar+=Math.round(frameCount/60);
 nuvens();
 inimigos();
+if(grupoInimigos.isTouching(Rex)){
+    estado=ACABOU;
+}
+
+
+
+
+
+    
+} else if (estado === ACABOU){
+chao.velocityX=0;
+grupoInimigos.setVelocityXEach(0);
+grupoNuvens.setVelocityXEach(0);
+}
+
+
+
+
+
+
+Rex.collide(chao2);
+
+
 
 drawSprites();
 textSize(15);
 textFont('Courier New');
 text(placar,500,50);
-placar+=Math.round(frameCount/60);
+
 
 
 }
@@ -76,6 +106,8 @@ function nuvens(){
 
         nuvem.depth=Rex.depth;
         Rex.depth+=1;
+
+        grupoNuvens.add(nuvem);
     }
  
 }
@@ -101,5 +133,7 @@ function inimigos(){
         }
         inimigo.scale=0.5;
         inimigo.lifetime=300;
+
+        grupoInimigos.add(inimigo);
     }
 }
