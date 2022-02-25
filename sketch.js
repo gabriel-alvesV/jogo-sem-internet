@@ -11,6 +11,12 @@ var grupoNuvens;
 var JOGANDO = 1;
 var ACABOU = 0;
 var estado = JOGANDO;
+var morreu;
+var restart;
+var imagemRestart;
+var gameover;
+var imagemGameover;
+
 function preload(){
 RexCorrendo = loadAnimation("trex1.png","trex3.png","trex4.png");
 grama= loadImage('ground2.png');
@@ -21,12 +27,18 @@ I3=loadImage('obstacle3.png');
 I4=loadImage('obstacle4.png');
 I5=loadImage('obstacle5.png');
 I6=loadImage('obstacle6.png');
+morreu=loadAnimation('trex_collided.png');
+imagemRestart=loadImage('restart.png');
+imagemGameover=loadImage('gameOver.png');
+
+
 }
 
 function setup(){
 createCanvas(600,200);
 Rex = createSprite(50, 160, 20, 50);
 Rex.addAnimation("correndo", RexCorrendo);
+Rex.addAnimation('morreu',morreu);
 Rex.scale = 0.5;
 
 borda = createEdgeSprites();
@@ -43,11 +55,23 @@ console.log(numero);
 
 grupoInimigos = new Group();
 grupoNuvens = new Group();
+
+//Rex.debug = true;
+Rex.setCollider("circle",0,0,40);
+
+gameover=createSprite(300,100);
+gameover.addImage(imagemGameover);
+restart=createSprite(300,150);
+restart.addImage(imagemRestart);
+restart.scale=0.8;
+
+
 }
 
 function draw(){
 background("white");
 //console.log(Rex.y);
+console.log("estado do jogo:"+estado);
 
 if(estado === JOGANDO){
     chao.velocityX=-2;
@@ -71,9 +95,13 @@ if(grupoInimigos.isTouching(Rex)){
 
     
 } else if (estado === ACABOU){
+    Rex.changeAnimation("morreu");
 chao.velocityX=0;
+Rex.velocityY=0;
 grupoInimigos.setVelocityXEach(0);
 grupoNuvens.setVelocityXEach(0);
+grupoInimigos.setLifetimeEach(-1);
+grupoNuvens.setLifetimeEach(-1);
 }
 
 
