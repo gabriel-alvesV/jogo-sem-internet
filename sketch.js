@@ -69,13 +69,14 @@ restart=createSprite(300,150);
 restart.addImage(imagemRestart);
 restart.scale=0.8;
 
+//inimigo.velocityX = 5;
 
 }
 
 function draw(){
 background("white");
 //console.log(Rex.y);
-console.log("estado do jogo:"+estado);
+//console.log("estado do jogo:"+estado);
 
 if(estado === JOGANDO){
     gameover.visible=false;
@@ -89,7 +90,7 @@ if(chao.x<0){
     chao.x=chao.width/2;
 }
 Rex.velocityY += 1;
-placar+=Math.round(frameCount/60);
+placar+=Math.round(frameRate()/60);
 nuvens();
 inimigos();
 if(grupoInimigos.isTouching(Rex)){
@@ -115,6 +116,10 @@ grupoInimigos.setVelocityXEach(0);
 grupoNuvens.setVelocityXEach(0);
 grupoInimigos.setLifetimeEach(-1);
 grupoNuvens.setLifetimeEach(-1);
+if(mousePressedOver(restart)){
+    reset();
+}
+
 }
 
 
@@ -125,7 +130,6 @@ grupoNuvens.setLifetimeEach(-1);
 Rex.collide(chao2);
 
 
-
 drawSprites();
 textSize(15);
 textFont('Courier New');
@@ -133,6 +137,14 @@ text(placar,500,50);
 
 
 
+}
+
+function reset(){
+    estado=JOGANDO;
+    grupoNuvens.destroyEach();
+    grupoInimigos.destroyEach();
+    Rex.changeAnimation('correndo');
+    placar=0;
 }
 
 function nuvens(){
@@ -178,3 +190,4 @@ function inimigos(){
         grupoInimigos.add(inimigo);
     }
 }
+
